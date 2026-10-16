@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMART HUB AI</title><style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+  background: linear-gradient(135deg, #10152f, #173c61, #401b54);
+  min-height: 100vh;
+}
+
+h1 {
+  color: #66f2ff;
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #d4e7ff;
+  margin-bottom: 25px;
+}
+
+.card {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 18px;
+  padding: 20px;
+  margin: 15px auto;
+  max-width: 500px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+#clock {
+  font-size: 38px;
+  font-weight: bold;
+  color: #66f2ff;
+}
+
+#date {
+  margin-top: 8px;
+  color: #e0eaff;
+}
+
+button {
+  background: #00c8dd;
+  color: #06162b;
+  border: none;
+  padding: 12px 18px;
+  margin: 6px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+input {
+  width: 95%;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+#message {
+  color: #8fffd2;
+  overflow-wrap: anywhere;
+}
+
+footer {
+  margin-top: 25px;
+  font-size: 12px;
+  color: #c7d7ef;
+}
+</style></head><body><h1>SMART HUB AI</h1>
+<div class="subtitle">Your Personal Smart Dashboard</div><div class="card">
+  <h2>🕒 Date & Time</h2>
+  <div id="clock">00:00:00</div>
+  <div id="date"></div>
+</div><div class="card">
+  <h2>💬 Message Centre</h2>
+  <p>Write a message below:</p>
+  <input id="userMessage" type="text" placeholder="Type your message here">
+  <br>
+  <button onclick="showMessage()">Show Message</button>
+  <button onclick="clearMessage()">Clear</button>
+  <h3 id="message"></h3>
+</div><div class="card">
+  <h2>🤖 Smart Assistant</h2>
+  <button onclick="greet()">Say Hello</button>
+  <button onclick="speakTime()">Speak Time</button>
+  <button onclick="batteryInfo()">Battery Info</button>
+  <p id="assistantOutput">Hello! Your Smart Hub is ready.</p>
+</div><footer>
+  SMART HUB AI • Personal Dashboard
+</footer><script>
+function updateClock() {
+  const now = new Date();
+
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString();
+
+  document.getElementById("date").textContent =
+    now.toLocaleDateString(undefined, {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+}
+
+function showMessage() {
+  const text = document.getElementById("userMessage").value.trim();
+
+  document.getElementById("message").textContent =
+    text || "Please type a message first.";
+}
+
+function clearMessage() {
+  document.getElementById("userMessage").value = "";
+  document.getElementById("message").textContent = "";
+}
+
+function greet() {
+  document.getElementById("assistantOutput").textContent =
+    "Hello! Welcome to your SMART HUB AI. Have a great day!";
+}
+
+function speakTime() {
+  const text = "The current time is " +
+    new Date().toLocaleTimeString();
+
+  document.getElementById("assistantOutput").textContent = text;
+
+  if ("speechSynthesis" in window) {
+    const speech = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(speech);
+  }
+}
+
+async function batteryInfo() {
+  const output = document.getElementById("assistantOutput");
+
+  if (navigator.getBattery) {
+    try {
+      const battery = await navigator.getBattery();
+      output.textContent =
+        "Battery: " + Math.round(battery.level * 100) + "%" +
+        (battery.charging ? " • Charging" : " • Not charging");
+    } catch (error) {
+      output.textContent = "Battery information is unavailable.";
+    }
+  } else {
+    output.textContent =
+      "Battery information is not supported in this browser.";
+  }
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+</script></body>
+  </html>
